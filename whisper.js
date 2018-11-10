@@ -1,28 +1,39 @@
 export default function (question) {
   let endX = question.startX
   let endY = question.startY
+  let treasureX = question.treasureX
+  let treasureY = question.treasureY
+  let treasureFound = false
+
+  function treasureCheck() {
+    if (endX == treasureX && endY == treasureY) {
+      treasureFound = true
+    }
+  }
 
   question.instructions.split('').forEach(m => {
     switch (m) {
       case 'F':
-        endX++
-        break
+      endX++
+      break
       case 'B':
-        endX--
-        break
+      endX--
+      break
       case 'L':
-        endY++
-        break
+      endY++
+      break
       case 'R':
-        endY--
-        break
+      endY--
+      break
       default:
-        break
+      break
     }
+    treasureCheck()
   })
-
+ 
   return {
     endX,
-    endY
+    endY,
+    treasureFound
   }
 }
