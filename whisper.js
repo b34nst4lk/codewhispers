@@ -6,7 +6,6 @@ export default function (question) {
   let treasureX = question.treasureX
   let treasureY = question.treasureY
   let treasureFound = false
-  let treasureStolen = false
 
   let pirateX = question.pirateX
   let pirateY = question.pirateY
@@ -48,46 +47,38 @@ export default function (question) {
   function treasureCheck(i) {
     if (!treasureFound && treasureX === endX && treasureY === endY) {
       treasureFound = true
-      addNewEvent(i, 'treasure found')
-      treasureOwner = "me"
     }
   }
 
   function spyCheck(i) {
     if (!spyFollowing && !treasureFound && spyX === endX && spyY === endY) {
       spyFollowing = true
-      addNewEvent(i, 'spy following')
     } 
-    if (spyFollowing && treasureFound) {
-      treasureOwner = "spy"   
-    }
   }
 
   function pirateCheck(i) {
     if (!spyAndPirateFought && pirateX === endX && pirateY === endY) {
       pirateEncountered = true
-      addNewEvent(i, 'pirates encountered')
       if (spyFollowing && treasureFound) {
-        addNewEvent(i, 'fight!')
         spyAndPirateFought = true
-      } else if (treasureFound) {
-        treasureStolen = true
-      }
+      } 
     }
   }
 
   question.instructions.split('').forEach((m,i) => {
     move(m);
     spyCheck(i);
+    treasureCheck(i)
     pirateCheck(i);
-    treasureCheck(i);
   })
 
   if (!treasureFound) treasureOwner = "no-one"
-  if (spyFollowing && treasureStolen) treasureOwner = "spy"
-  if (pirateEncountered && treasureStolen) treasureOwner = 'pirate'
-  if (spyAndPirateFought) treasureOwner = "me"
-
+  else if (treasureFound) {
+    treasureOwner = "me"
+    if (spyFollowing) treasureOwner = "spy"
+    if (pirateEncountered) treasureOwner = 'pirate'
+    if (spyAndPirateFought) treasureOwner = "me"
+  }
   console.log(events)
  
   return {
